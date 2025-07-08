@@ -13,7 +13,11 @@ spec:
         app: register-app
     spec:
       containers:
-        - name: register-app
-          image: nginx:1.24
-          ports:
-            - containerPort: 80
+      - name: register-app
+        image: zohaib56/register-app-pipeline:latest
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
