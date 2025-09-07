@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: register-app-deployment
-  namespace: register-app   # ✅ namespace add kiya
+  # namespace line hata di, default me chalega
 spec:
   replicas: 2
   selector:
