@@ -29,7 +29,7 @@ pipeline {
                 echo "Before:"
                 cat deployment.yaml
 
-                sed -i 's|${APP_NAME}:.*|${APP_NAME}:${IMAGE_TAG}|g' deployment.yaml
+                sed -i "s|${APP_NAME}:.*|${APP_NAME}:${IMAGE_TAG}|g" deployment.yaml
 
                 echo "After:"
                 cat deployment.yaml
@@ -45,8 +45,29 @@ pipeline {
                 git add deployment.yaml
                 git commit -m "Updated deployment.yaml with image tag ${IMAGE_TAG}" || echo "No changes to commit"
                 """
-                withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
-                    sh "git push https://github.com/zohaib9990/gitops-register-app.git main"
+
+                withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    sh """
+                    if git diff --cached --quiet; then
+                        echo "No changes to push"
+                    else
+                        git push https://${GIT_USER}:${GIT_PASS}@github.com/zohaib9990/gitops-register-app.git main
+                    fi
+                    """
+                }
+            }
+        }
+
+        stage("Trigger CD Pipeline") {
+            steps {
+                script {
+                    sh """
+                    curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST \
+                        -H 'cache-control: no-cache' \
+                        -H 'content-type: application/x-www-form-urlencoded' \
+                        --data 'IMAGE_TAG=${IMAGE_TAG}' \
+                        http://your-jenkins-server:8080/job/your-cd-job/buildWithParameters
+                    """
                 }
             }
         }
