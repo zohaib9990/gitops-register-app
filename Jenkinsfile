@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         APP_NAME = "register-app-pipeline"
-        IMAGE_TAG = "${params.IMAGE_TAG}"          // ✅ Fix param usage
+        IMAGE_TAG = "${params.IMAGE_TAG}"          // ✅ param usage
         JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
 
@@ -67,7 +67,7 @@ pipeline {
                         -H 'cache-control: no-cache' \
                         -H 'content-type: application/x-www-form-urlencoded' \
                         --data 'IMAGE_TAG=${IMAGE_TAG}' \
-                        http://your-jenkins-server:8080/job/your-cd-job/buildWithParameters
+                        http://172.31.29.195:8080/job/gitops-register-app-cd/buildWithParameters
                     """
                 }
             }
