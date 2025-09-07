@@ -7,8 +7,8 @@ pipeline {
 
     environment {
         APP_NAME = "register-app-pipeline"
-        IMAGE_TAG = "${params.IMAGE_TAG}"
-        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")   // <-- Added this
+        IMAGE_TAG = "${params.IMAGE_TAG}"          // ✅ Fix param usage
+        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
 
     stages {
